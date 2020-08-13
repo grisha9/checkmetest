@@ -4,16 +4,16 @@
 в качестве бд postgres т.к. для него есть полноценный асинхронный драйвер.
 
 запуск проекта:
-установка бд из докер образа
+1)установка бд из докер образа:
 docker run --name postgres-test -e POSTGRES_PASSWORD=mysecretpassword -d -p 5432:5432 postgres:11-alpine
 
-запуск скриптов для создания бд 
+2)запуск скриптов для создания бд: 
 mvn liquibase:updateSQL
 
-сборка проекта 
+3)сборка проекта:  
 mvn clean package
 
-запуск проекта
+4)запуск проекта:
 mvn exec:java
 
 или можно проверить на тестах, убрав аннотацию @Ignore MainVerticleTest 

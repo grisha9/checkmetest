@@ -4,13 +4,13 @@ import io.github.jklingsporn.vertx.jooq.shared.internal.VertxPojo;
 
 import java.util.List;
 
-public class PageResult<T extends VertxPojo> {
+public class PageDto<T extends VertxPojo> {
     private final List<T> result;
     private final int count;
     private final int offset;
     private final int limit;
 
-    public PageResult(List<T> result, int count, int offset, int limit) {
+    public PageDto(List<T> result, int count, int offset, int limit) {
         this.result = result;
         this.count = count;
         this.offset = offset;

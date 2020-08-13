@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(VertxUnitRunner.class)
-//@Ignore("integration tests. need db")
+@Ignore("integration tests. need db")
 public class MainVerticleTest {
     private static final int TEST_PORT = 8080;
     private static final String LOCALHOST = "localhost";
@@ -40,7 +40,6 @@ public class MainVerticleTest {
         client.get(TEST_PORT, LOCALHOST, "/clinic")
                 .addQueryParam("limit", "3")
                 .addQueryParam("offset", "1")
-                //.addQueryParam("name", "1")
                 .send(ar -> {
                     tc.assertTrue(ar.succeeded());
                     tc.assertTrue(ar.result().body().length() > 0);
@@ -164,5 +163,71 @@ public class MainVerticleTest {
                 });
     }
 
+    @Test
+    public void getPriceById(TestContext tc) {
+        Async async = tc.async();
+        client.get(TEST_PORT, LOCALHOST, "/price/1")
+                .send(ar -> {
+                    tc.assertTrue(ar.succeeded());
+                    tc.assertTrue(ar.result().body().length() > 0);
+                    async.complete();
+                });
+    }
 
+    @Test
+    public void createPrice(TestContext tc) {
+        Async async = tc.async();
+        client.post(TEST_PORT, LOCALHOST, "/price")
+                .putHeader(HttpHeaders.CONTENT_TYPE.toString(), HttpHeaderValues.APPLICATION_JSON.toString())
+                .sendJsonObject(new JsonObject()
+                        .put("clinic_id", 3)
+                        .put("examination_id", 1)
+                        .put("price", 100), ar -> {
+                    tc.assertTrue(ar.succeeded());
+                    tc.assertTrue(ar.result().body().length() > 0);
+                    async.complete();
+                });
+    }
+
+    @Test
+    public void deletePrice(TestContext tc) {
+        Async async = tc.async();
+        client.delete(TEST_PORT, LOCALHOST, "/price/5")
+                .send(ar -> {
+                    tc.assertTrue(ar.succeeded());
+                    tc.assertTrue(ar.result().body().length() > 0);
+                    async.complete();
+                });
+    }
+
+    @Test
+    public void updatePrice(TestContext tc) {
+        Async async = tc.async();
+        client.put(TEST_PORT, LOCALHOST, "/price/6")
+                .putHeader(HttpHeaders.CONTENT_TYPE.toString(), HttpHeaderValues.APPLICATION_JSON.toString())
+                .sendJsonObject(new JsonObject()
+                        .put("id", 6L)
+                        .put("clinic_id", 3)
+                        .put("examination_id", 1)
+                        .put("version", 0L)
+                        .put("price", 1000), ar -> {
+                    tc.assertTrue(ar.succeeded());
+                    tc.assertTrue(ar.result().body().length() > 0);
+                    async.complete();
+                });
+    }
+
+    @Test
+    public void getPrice(TestContext tc) {
+        Async async = tc.async();
+        client.get(TEST_PORT, LOCALHOST, "/price")
+                .addQueryParam("examinationId", "1")
+                .addQueryParam("descPrice", "true")
+                .send(ar -> {
+                    tc.assertTrue(ar.succeeded());
+                    tc.assertTrue(ar.result().body().length() > 0);
+                    async.complete();
+
+                });
+    }
 }

@@ -10,7 +10,7 @@ import org.jooq.Record1;
 import org.jooq.SelectJoinStep;
 import org.jooq.SelectWhereStep;
 import org.jooq.UpdateConditionStep;
-import ru.rzn.gmyasoedov.checkmetest.model.PageResult;
+import ru.rzn.gmyasoedov.checkmetest.model.PageDto;
 import ru.rzn.gmyasoedov.checkmetest.tables.daos.ExaminationDao;
 import ru.rzn.gmyasoedov.checkmetest.tables.pojos.Examination;
 import ru.rzn.gmyasoedov.checkmetest.tables.records.ExaminationRecord;
@@ -36,7 +36,7 @@ public class ExaminationService {
         return examinationDao.deleteById(id);
     }
 
-    public Future<PageResult<Examination>> getList(String nameFilter, int offset, int limit) {
+    public Future<PageDto<Examination>> getList(String nameFilter, int offset, int limit) {
         Future<List<Examination>> listFuture = examinationDao.queryExecutor()
                 .findMany(dslContext -> getFindQuery(dslContext, nameFilter, offset, limit));
         Future<QueryResult> countFuture = examinationDao.queryExecutor()
@@ -47,7 +47,7 @@ public class ExaminationService {
                     List<Examination> list = (List<Examination>) combine.list().get(0);
                     AsyncQueryResult countResult = (AsyncQueryResult) combine.list().get(1);
                     Integer count = countResult.get(0, Integer.class);
-                    return new PageResult<>(list, count, offset, limit);
+                    return new PageDto<>(list, count, offset, limit);
                 });
     }
 

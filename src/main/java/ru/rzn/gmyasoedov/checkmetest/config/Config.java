@@ -11,10 +11,13 @@ import org.jooq.conf.RenderQuotedNames;
 import org.jooq.impl.DefaultConfiguration;
 import ru.rzn.gmyasoedov.checkmetest.Constants;
 import ru.rzn.gmyasoedov.checkmetest.service.ClinicService;
+import ru.rzn.gmyasoedov.checkmetest.service.ExaminationPriceService;
 import ru.rzn.gmyasoedov.checkmetest.service.ExaminationService;
 import ru.rzn.gmyasoedov.checkmetest.tables.daos.ClinicDao;
 import ru.rzn.gmyasoedov.checkmetest.tables.daos.ExaminationDao;
+import ru.rzn.gmyasoedov.checkmetest.tables.daos.ExaminationPriceDao;
 import ru.rzn.gmyasoedov.checkmetest.web.ClinicRestController;
+import ru.rzn.gmyasoedov.checkmetest.web.ExaminationPriceRestController;
 import ru.rzn.gmyasoedov.checkmetest.web.ExaminationRestController;
 
 import java.io.IOException;
@@ -32,6 +35,7 @@ public class Config {
     private ClinicRestController clinicRestController = null;
     private Properties properties;
     private ExaminationRestController examinationRestController;
+    private ExaminationPriceRestController examinationPriceRestController;
 
     public Config(Vertx vertx) {
         init(vertx);
@@ -43,6 +47,10 @@ public class Config {
 
     public ExaminationRestController getExaminationRestController() {
         return examinationRestController;
+    }
+
+    public ExaminationPriceRestController getExaminationPriceRestController() {
+        return examinationPriceRestController;
     }
 
     public int getWebPort() {
@@ -67,9 +75,13 @@ public class Config {
 
         ClinicDao clinicDao = new ClinicDao(configuration, client);
         ExaminationDao examinationDao = new ExaminationDao(configuration, client);
+        ExaminationPriceDao examinationPriceDao = new ExaminationPriceDao(configuration, client);
 
         clinicRestController = new ClinicRestController(new ClinicService(clinicDao));
         examinationRestController = new ExaminationRestController(new ExaminationService(examinationDao));
+        examinationPriceRestController = new ExaminationPriceRestController(
+                new ExaminationPriceService(examinationPriceDao)
+        );
     }
 
     private Properties loadProperties() {

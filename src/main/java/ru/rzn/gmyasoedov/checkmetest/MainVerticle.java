@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.rzn.gmyasoedov.checkmetest.config.Config;
 import ru.rzn.gmyasoedov.checkmetest.web.ClinicRestController;
+import ru.rzn.gmyasoedov.checkmetest.web.ExaminationPriceRestController;
 import ru.rzn.gmyasoedov.checkmetest.web.ExaminationRestController;
 
 import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
@@ -32,6 +33,7 @@ public class MainVerticle extends AbstractVerticle {
         Config config = new Config(vertx);
         ClinicRestController clinicRestController = config.getClinicRestController();
         ExaminationRestController examinationRestController = config.getExaminationRestController();
+        ExaminationPriceRestController examinationPriceRestController = config.getExaminationPriceRestController();
 
         Promise<Void> promise = Promise.promise();
         HttpServer server = vertx.createHttpServer();
@@ -51,6 +53,12 @@ public class MainVerticle extends AbstractVerticle {
         router.post("/examination").consumes(APPLICATION_JSON.toString()).handler(examinationRestController::insert);
         router.put("/examination/:id").consumes(APPLICATION_JSON.toString()).handler(examinationRestController::update);
         router.delete("/examination/:id").handler(examinationRestController::deleteById);
+
+        router.get("/price").handler(examinationPriceRestController::getList);
+        router.get("/price/:id").handler(examinationPriceRestController::getById);
+        router.post("/price").consumes(APPLICATION_JSON.toString()).handler(examinationPriceRestController::insert);
+        router.put("/price/:id").consumes(APPLICATION_JSON.toString()).handler(examinationPriceRestController::update);
+        router.delete("/price/:id").handler(examinationPriceRestController::deleteById);
 
         server.requestHandler(router)
                 .listen(config.getWebPort(), ar -> {

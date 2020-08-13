@@ -7,6 +7,7 @@ import ru.rzn.gmyasoedov.checkmetest.tables.pojos.Examination;
 import ru.rzn.gmyasoedov.checkmetest.web.converter.request.FilteredRequestConverter;
 import ru.rzn.gmyasoedov.checkmetest.web.converter.response.DeleteUpdateConverter;
 import ru.rzn.gmyasoedov.checkmetest.web.converter.response.ErrorConverter;
+import ru.rzn.gmyasoedov.checkmetest.web.converter.response.InsertConverter;
 import ru.rzn.gmyasoedov.checkmetest.web.converter.response.PageResultConverter;
 import ru.rzn.gmyasoedov.checkmetest.web.converter.response.ResultConverter;
 import ru.rzn.gmyasoedov.checkmetest.web.dto.FilteredRequest;
@@ -44,7 +45,7 @@ public class ExaminationRestController {
     public void insert(RoutingContext context) {
         Future.<Examination>future(event -> event.complete(new Examination(context.getBodyAsJson())))
                 .compose(examinationService::insert)
-                .onSuccess(result -> DeleteUpdateConverter.convert(result, context))
+                .onSuccess(result -> InsertConverter.convert(result, context))
                 .onFailure(error -> ErrorConverter.convert(error, context));
     }
 

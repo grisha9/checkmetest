@@ -10,14 +10,13 @@ import org.jooq.Record1;
 import org.jooq.SelectJoinStep;
 import org.jooq.SelectWhereStep;
 import org.jooq.UpdateConditionStep;
-import ru.rzn.gmyasoedov.checkmetest.model.PageResult;
+import ru.rzn.gmyasoedov.checkmetest.model.PageDto;
 import ru.rzn.gmyasoedov.checkmetest.tables.daos.ClinicDao;
 import ru.rzn.gmyasoedov.checkmetest.tables.pojos.Clinic;
 import ru.rzn.gmyasoedov.checkmetest.tables.records.ClinicRecord;
 
 import java.util.List;
 
-import static org.jooq.impl.DSL.count;
 import static ru.rzn.gmyasoedov.checkmetest.Constants.LIKE_REGEXP;
 import static ru.rzn.gmyasoedov.checkmetest.Constants.TABLE_CLINIC;
 
@@ -41,7 +40,7 @@ public class ClinicService {
         return clinicDao.insertReturningPrimary(clinic);
     }
 
-    public Future<PageResult<Clinic>> getList(String nameFilter, int offset, int limit) {
+    public Future<PageDto<Clinic>> getList(String nameFilter, int offset, int limit) {
         Future<List<Clinic>> listFuture = clinicDao.queryExecutor()
                 .findMany(dslContext -> getFindQuery(dslContext, nameFilter, offset, limit));
         Future<QueryResult> countFuture = clinicDao.queryExecutor()
@@ -52,7 +51,7 @@ public class ClinicService {
                     List<Clinic> list = (List<Clinic>) combine.list().get(0);
                     AsyncQueryResult countResult = (AsyncQueryResult) combine.list().get(1);
                     Integer count = countResult.get(0, Integer.class);
-                    return new PageResult<>(list, count, offset, limit);
+                    return new PageDto<>(list, count, offset, limit);
                 });
     }
 

@@ -69,6 +69,11 @@
                 <version>${jook.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-meta</artifactId>
+                <version>${jook.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgres.version}</version>
@@ -246,6 +251,14 @@
                 </executions>
 
                 <configuration>
+                    <!--generate from db-->
+                    <!--<jdbc>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>jdbc:postgresql://127.0.0.1:5432/postgres</url>
+                        <user>postgres</user>
+                        <password>mysecretpassword</password>
+                    </jdbc>-->
+
                     <generator>
                         <name>io.github.jklingsporn.vertx.jooq.generate.classic.ClassicAsyncVertxGenerator</name>
                         <database>
@@ -265,6 +278,14 @@
                                 </property>
                             </properties>
                         </database>
+
+                        <!--generate from db-->
+                        <!--<database>
+                            <name>org.jooq.meta.postgres.PostgresDatabase</name>
+                            <includes>.*</includes>
+                            <inputSchema>public</inputSchema>
+                        </database>>-->
+
                         <target>
                             <packageName>ru.rzn.gmyasoedov.checkmetest</packageName>
                             <directory>target/generated-sources/jooq</directory>

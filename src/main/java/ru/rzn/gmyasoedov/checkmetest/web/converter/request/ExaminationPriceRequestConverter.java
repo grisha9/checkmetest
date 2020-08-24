@@ -11,14 +11,13 @@ import static ru.rzn.gmyasoedov.checkmetest.Constants.MAX_PAGE_SIZE;
 import static ru.rzn.gmyasoedov.checkmetest.Constants.QUERY_PARAM_DESC_PRICE;
 import static ru.rzn.gmyasoedov.checkmetest.Constants.QUERY_PARAM_EXAMINATION_ID;
 import static ru.rzn.gmyasoedov.checkmetest.Constants.QUERY_PARAM_LIMIT;
-import static ru.rzn.gmyasoedov.checkmetest.Constants.QUERY_PARAM_NAME;
 import static ru.rzn.gmyasoedov.checkmetest.Constants.QUERY_PARAM_OFFSET;
 
 public class ExaminationPriceRequestConverter {
 
     public static ExaminationPriceRequest convert(HttpServerRequest request) {
         Long examinationId = RequestUtils.getArgument(() -> Long.valueOf(request.getParam(QUERY_PARAM_EXAMINATION_ID)),
-                QUERY_PARAM_NAME);
+                QUERY_PARAM_EXAMINATION_ID);
         int offset = RequestUtils.getArgument(() -> Optional.ofNullable(request.getParam(QUERY_PARAM_OFFSET))
                 .map(Integer::valueOf)
                 .map(i -> Math.max(i, 0))

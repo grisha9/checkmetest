@@ -1,7 +1,5 @@
 package ru.rzn.gmyasoedov.checkmetest.service;
 
-import io.github.jklingsporn.vertx.jooq.shared.async.AsyncQueryResult;
-import io.github.jklingsporn.vertx.jooq.shared.internal.QueryResult;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import org.apache.commons.lang3.StringUtils;
@@ -43,14 +41,13 @@ public class ClinicService {
     public Future<PageDto<Clinic>> getList(String nameFilter, int offset, int limit) {
         Future<List<Clinic>> listFuture = clinicDao.queryExecutor()
                 .findMany(dslContext -> getFindQuery(dslContext, nameFilter, offset, limit));
-        Future<QueryResult> countFuture = clinicDao.queryExecutor()
-                .query(dslContext -> getCountQuery(dslContext, nameFilter));
-
+        Future<Integer> countFuture = clinicDao.queryExecutor()
+                .query(dslContext -> getCountQuery(dslContext, nameFilter))
+                .map(q -> q.get(0, Integer.class));
         return CompositeFuture.all(listFuture, countFuture)
                 .map(combine -> {
                     List<Clinic> list = (List<Clinic>) combine.list().get(0);
-                    AsyncQueryResult countResult = (AsyncQueryResult) combine.list().get(1);
-                    Integer count = countResult.get(0, Integer.class);
+                    Integer count = (Integer) combine.list().get(1);
                     return new PageDto<>(list, count, offset, limit);
                 });
     }
